@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { ChevronDown, Menu, PhoneCall, X } from "lucide-react";
-import { HELPLINE, PROGRAMS } from "@/data/laef";
+import { HELPLINE } from "@/data/laef";
 import { ButtonLink } from "./Button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { getPrograms, ProgramItem } from "@/services/program";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 const aboutLinks = [
   { href: "/about/story", label: "Our Story" },
@@ -59,6 +61,32 @@ function DropItem({ href, label }: { href: string; label: string }) {
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [section, setSection] = useState<string | null>(null);
+  const [programs, setPrograms] = useState<ProgramItem[]>([]);
+  const [programsLoading, setProgramsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchPrograms = async () => {
+      try {
+        setProgramsLoading(true);
+        const res = await getPrograms();
+        if (isMounted) {
+          setPrograms(res);
+        }
+      } catch (error: any) {
+        console.error("Error fetching programs", error.message);
+      } finally {
+        if (isMounted) {
+          setProgramsLoading(false);
+        }
+      }
+    };
+    fetchPrograms();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50">
@@ -88,18 +116,45 @@ export function Navbar() {
                 <DropItem key={l.href} href={l.href} label={l.label} />
               ))}
             </DesktopDropdown>
+            
             <DesktopDropdown label="Our Work">
               <DropItem href="/programs" label="All Programmes" />
-              {PROGRAMS.map((p: { slug: Key | null | undefined; name: string; }) => (
-                <DropItem key={p.slug} href={`/programs/${String(p.slug)}`} label={p.name} />
-              ))}
+              {programsLoading ? (
+                <SkeletonTheme baseColor="#e5e7eb" highlightColor="#f3f4f6">
+                  <div className="px-3 py-1 space-y-2">
+                    {Array.from({ length: 7 }).map((_, i) => (
+                      <Skeleton key={i} height={16} width={i % 2 === 0 ? "85%" : "70%"} />
+                    ))}
+                  </div>
+                </SkeletonTheme>
+              ) : (
+                [...programs].reverse().map((p: ProgramItem) => (
+                  <DropItem key={p.slug} href={`/programs/${String(p.slug)}`} label={p.name} />
+                ))
+              )}
             </DesktopDropdown>
+
             <Link
               href="/gallery"
               className="rounded-full px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-primary"
             >
               Gallery / Events
             </Link>
+            
+            <Link
+              href="/donor-remarks"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-primary"
+            >
+              Donor Remarks
+            </Link>
+
+            <Link
+              href="/fit-test"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-primary"
+            >
+              Fit Test
+            </Link>
+            
             <ButtonLink href="/donate" size="sm" className="ml-2">
               Donate
             </ButtonLink>
@@ -120,45 +175,91 @@ export function Navbar() {
               <Link href="/" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 font-semibold">
                 Home
               </Link>
-              {[
-                { key: "about", label: "About Us", items: [{ href: "/about", label: "About LAEF" }, ...aboutLinks] },
-                {
-                  key: "work",
-                  label: "Our Work / Programs",
-                  items: [
-                    { href: "/programs", label: "All Programmes" },
-                    ...PROGRAMS.map((p: { slug: string; name: string; }) => ({ href: `/programs/${p.slug}`, label: p.name })),
-                  ],
-                },
-              ].map((group) => (
-                <div key={group.key}>
-                  <button
-                    onClick={() => setSection(section === group.key ? null : group.key)}
-                    className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 font-semibold"
-                  >
-                    {group.label}
-                    <ChevronDown
-                      className={cn("h-4 w-4 transition-transform", section === group.key && "rotate-180")}
-                    />
-                  </button>
-                  {section === group.key && (
-                    <div className="ml-3 border-l border-border pl-3">
-                      {group.items.map((item) => (
+              
+              <div key="about">
+                <button
+                  onClick={() => setSection(section === "about" ? null : "about")}
+                  className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 font-semibold"
+                >
+                  About Us
+                  <ChevronDown
+                    className={cn("h-4 w-4 transition-transform", section === "about" && "rotate-180")}
+                  />
+                </button>
+                {section === "about" && (
+                  <div className="ml-3 border-l border-border pl-3">
+                    <Link
+                      href="/about"
+                      onClick={() => setOpen(false)}
+                      className="block rounded-lg px-3 py-2 text-sm text-muted-foreground"
+                    >
+                      About LAEF
+                    </Link>
+                    {aboutLinks.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className="block rounded-lg px-3 py-2 text-sm text-muted-foreground"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div key="work">
+                <button
+                  onClick={() => setSection(section === "work" ? null : "work")}
+                  className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 font-semibold"
+                >
+                  Our Work / Programs
+                  <ChevronDown
+                    className={cn("h-4 w-4 transition-transform", section === "work" && "rotate-180")}
+                  />
+                </button>
+                {section === "work" && (
+                  <div className="ml-3 border-l border-border pl-3">
+                    <Link
+                      href="/programs"
+                      onClick={() => setOpen(false)}
+                      className="block rounded-lg px-3 py-2 text-sm text-muted-foreground"
+                    >
+                      All Programmes
+                    </Link>
+                    {programsLoading ? (
+                      <SkeletonTheme baseColor="#e5e7eb" highlightColor="#f3f4f6">
+                        <div className="px-3 py-2 space-y-2">
+                          {Array.from({ length: 7 }).map((_, i) => (
+                            <Skeleton key={i} height={14} width="80%" />
+                          ))}
+                        </div>
+                      </SkeletonTheme>
+                    ) : (
+                      [...programs].reverse().map((p: ProgramItem) => (
                         <Link
-                          key={item.label}
-                          href={item.href}
+                          key={p.slug}
+                          href={`/programs/${p.slug}`}
                           onClick={() => setOpen(false)}
                           className="block rounded-lg px-3 py-2 text-sm text-muted-foreground"
                         >
-                          {item.label}
+                          {p.name}
                         </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+
               <Link href="/gallery" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 font-semibold">
                 Gallery / Events
+              </Link>
+              <Link href="/donor-remarks" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 font-semibold">
+                Donor Remarks
+              </Link>
+              <Link href="/fit-test" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 font-semibold">
+                Fit Test
               </Link>
               <ButtonLink href="/donate" onClick={() => setOpen(false)} className="mt-2" size="lg">
                 Donate

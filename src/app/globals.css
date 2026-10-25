@@ -1,11 +1,16 @@
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 /*
- * LAEF design system.
- * Forest green primary, sage secondary, warm gold accent, cream neutrals.
+ * ARSEN / ÖMÓKÙNRÍNnimi Summit 2026 Design System
+ * Forest Green: #125D1E
+ * Primary Green: #16852A
+ * Deep Green:    #073A13
+ * Gold Yellow:   #FFD654
+ * Sage:          #EAF2E8
  */
 
 @theme inline {
@@ -16,93 +21,145 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-deep: var(--primary-deep);
+
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+
   --color-sage: var(--sage);
   --color-sage-soft: var(--sage-soft);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
+
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
   --font-display: "Fraunces", Georgia, serif;
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --shadow-soft: 0 12px 40px -18px oklch(0.34 0.055 165 / 0.35);
-  --shadow-lift: 0 22px 60px -26px oklch(0.34 0.055 165 / 0.45);
+
+  --shadow-soft: 0 12px 40px -18px rgb(18 93 30 / 22%);
+  --shadow-lift: 0 22px 60px -26px rgb(18 93 30 / 38%);
 }
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.985 0.008 95);
-  --foreground: oklch(0.23 0.03 165);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.23 0.03 165);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.23 0.03 165);
-  --primary: oklch(0.36 0.056 165);
-  --primary-foreground: oklch(0.98 0.01 95);
-  --primary-deep: oklch(0.27 0.045 165);
-  --secondary: oklch(0.93 0.022 162);
-  --secondary-foreground: oklch(0.32 0.05 165);
-  --sage: oklch(0.7 0.033 162);
-  --sage-soft: oklch(0.945 0.018 162);
-  --muted: oklch(0.955 0.01 95);
-  --muted-foreground: oklch(0.51 0.02 165);
-  --accent: oklch(0.77 0.117 82);
-  --accent-foreground: oklch(0.26 0.05 82);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.98 0.01 95);
-  --success: oklch(0.6 0.1 158);
-  --border: oklch(0.9 0.014 162);
-  --input: oklch(0.9 0.014 162);
-  --ring: oklch(0.36 0.056 165);
-  --chart-1: oklch(0.36 0.056 165);
-  --chart-2: oklch(0.7 0.033 162);
-  --chart-3: oklch(0.77 0.117 82);
-  --chart-4: oklch(0.52 0.06 190);
-  --chart-5: oklch(0.6 0.1 158);
+
+  /* Main page */
+  --background: #F5F8F3;
+  --foreground: #16351B;
+
+  /* Cards */
+  --card: #FFFFFF;
+  --card-foreground: #16351B;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #16351B;
+
+  /* Primary forest green */
+  --primary: #16852A;
+  --primary-foreground: #FFFFFF;
+
+  /* Deep green for hover states */
+  --primary-deep: #125D1E;
+
+  /* Secondary green surfaces */
+  --secondary: #E4F0E2;
+  --secondary-foreground: #125D1E;
+
+  /* Sage green */
+  --sage: #83B88A;
+  --sage-soft: #EDF5EA;
+
+  /* Muted colors */
+  --muted: #EDF1EB;
+  --muted-foreground: #647565;
+
+  /* Gold yellow from the summit flyer */
+  --accent: #FFD654;
+  --accent-foreground: #263719;
+
+  /* Status colors */
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --success: #16852A;
+
+  /* Borders and inputs */
+  --border: #D5E4D1;
+  --input: #D5E4D1;
+  --ring: #16852A;
+
+  /* Charts */
+  --chart-1: #16852A;
+  --chart-2: #FFD654;
+  --chart-3: #125D1E;
+  --chart-4: #83B88A;
+  --chart-5: #A9D3A7;
 }
 
 .dark {
-  --background: oklch(0.19 0.025 165);
-  --foreground: oklch(0.96 0.01 95);
-  --card: oklch(0.24 0.03 165);
-  --card-foreground: oklch(0.96 0.01 95);
-  --popover: oklch(0.24 0.03 165);
-  --popover-foreground: oklch(0.96 0.01 95);
-  --primary: oklch(0.72 0.05 162);
-  --primary-foreground: oklch(0.19 0.025 165);
-  --primary-deep: oklch(0.3 0.045 165);
-  --secondary: oklch(0.3 0.035 165);
-  --secondary-foreground: oklch(0.96 0.01 95);
-  --sage: oklch(0.6 0.035 162);
-  --sage-soft: oklch(0.28 0.03 162);
-  --muted: oklch(0.28 0.03 165);
-  --muted-foreground: oklch(0.75 0.02 162);
-  --accent: oklch(0.77 0.117 82);
-  --accent-foreground: oklch(0.2 0.04 82);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.72 0.05 162);
+  --background: #091C0C;
+  --foreground: #F2F7EF;
+
+  --card: #102A14;
+  --card-foreground: #F2F7EF;
+
+  --popover: #102A14;
+  --popover-foreground: #F2F7EF;
+
+  --primary: #36A84A;
+  --primary-foreground: #FFFFFF;
+  --primary-deep: #16852A;
+
+  --secondary: #193D20;
+  --secondary-foreground: #E4F0E2;
+
+  --sage: #65A76D;
+  --sage-soft: #15331A;
+
+  --muted: #182D1B;
+  --muted-foreground: #B2C4B1;
+
+  --accent: #FFD654;
+  --accent-foreground: #263719;
+
+  --destructive: #F87171;
+  --destructive-foreground: #2A0D0D;
+  --success: #36A84A;
+
+  --border: rgb(213 228 209 / 16%);
+  --input: rgb(213 228 209 / 20%);
+  --ring: #36A84A;
+
+  --chart-1: #36A84A;
+  --chart-2: #FFD654;
+  --chart-3: #16852A;
+  --chart-4: #83B88A;
+  --chart-5: #A9D3A7;
 }
 
 @layer base {

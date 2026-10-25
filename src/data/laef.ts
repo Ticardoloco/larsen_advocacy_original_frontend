@@ -233,7 +233,7 @@ export const GALLERY: GalleryItem[] = [
   { id: "g4", caption: "Sorting donated clothing at the Charity Cloth Bank", category: "Bank 200", year: "2025", tone: 3 },
   { id: "g5", caption: "Omokunrinnimi mentorship circle for boys aged 8–18", category: "Omokunrinnimi", year: "2026", tone: 4 },
   { id: "g6", caption: "School visit in Ogun State", category: "Omokunrinnimi", year: "2024", tone: 5 },
-  { id: "g7", caption: "MINE Manual classroom session", category: "Heart Mender", year: "2025", tone: 6 },
+  { id: "g7", caption: "tMINE Manual classroom session", category: "Heart Mender", year: "2025", tone: 6 },
   { id: "g8", caption: "Students pledge to speak up", category: "Heart Mender", year: "2024", tone: 7 },
   { id: "g9", caption: "Community Champions training weekend", category: "Community Champions", year: "2026", tone: 8 },
   { id: "g10", caption: "Young protectors lead a safety walk", category: "Community Champions", year: "2025", tone: 9 },
@@ -285,3 +285,4 @@ export const ADMIN_USERS = [
   { id: "u3", name: "Grace Aluko", email: "finance@laef.example", role: "Admin", active: true },
   { id: "u4", name: "Tunde Bakare", email: "partnerships@laef.example", role: "Admin", active: false },
 ];
+
