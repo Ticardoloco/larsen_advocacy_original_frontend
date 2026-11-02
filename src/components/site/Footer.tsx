@@ -6,8 +6,10 @@ import { HELPLINE } from "@/data/laef";
 import { useEffect, useState } from "react";
 import { getPrograms, ProgramItem } from "@/services/program";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import { useRouter } from "next/navigation";
 
 export function Footer() {
+  const router = useRouter();
   const [programs, setPrograms] = useState<ProgramItem[]>([]);
   const [programsLoading, setProgramsLoading] = useState<boolean>(true);
 
@@ -34,6 +36,39 @@ export function Footer() {
       isMounted = false;
     };
   }, []);
+
+  // Smart handler for the Staff Dashboard link
+  const handleStaffDashboardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (typeof window === "undefined") {
+      router.push("/auth/login");
+      return;
+    }
+
+    const token = sessionStorage.getItem("laef_admin_token") || localStorage.getItem("laef_admin_token");
+    const storedUser = sessionStorage.getItem("laef_admin_user") || localStorage.getItem("laef_admin_user");
+
+    // If not authenticated, redirect to login
+    if (!token || !storedUser) {
+      router.push("/auth/login");
+      return;
+    }
+
+    try {
+      const user = JSON.parse(storedUser);
+      const role = user.role?.toLowerCase() || "";
+
+      // Route based on role
+      if (role === "superadmin" || role === "super-admin") {
+        router.push("/super-admin");
+      } else {
+        router.push("/admin");
+      }
+    } catch {
+      router.push("/auth/login");
+    }
+  };
 
   return (
     <footer className="mt-24 bg-primary-deep text-primary-foreground">
@@ -115,9 +150,9 @@ export function Footer() {
       <div className="border-t border-primary-foreground/10">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Larsen Advocacy and Empowerment Foundation. All rights reserved.</p>
-          <Link href="/auth/login" className="hover:text-accent">
+          <a href="/auth/login" onClick={handleStaffDashboardClick} className="hover:text-accent cursor-pointer">
             Staff Dashboard
-          </Link>
+          </a>
         </div>
       </div>
     </footer>

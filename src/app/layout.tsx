@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Toaster } from "sonner";
 // @ts-expect-error - Next.js allows CSS side-effect imports without a generated type declaration in this setup.
 import "./globals.css";
 // @ts-expect-error - TypeScript may not have declarations for this CSS side-effect import.
 import "react-loading-skeleton/dist/skeleton.css";
-import { Navbar } from "@/components/site/Navbar";
-import { Footer } from "@/components/site/Footer";
+import NavLayout from "@/components/site/NavLayout";
 
 export const metadata: Metadata = {
   title: "Larsen Advocacy and Empowerment Foundation (LAEF)",
@@ -35,9 +33,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = await headers();
-  const currentPath = headersList.get("x-invoke-path") || "";
-  const isAdmin = currentPath.startsWith("/admin");
+  
 
   return (
     <html lang="en">
@@ -57,9 +53,9 @@ export default async function RootLayout({
       </head>
       <body>
         <div className="flex min-h-screen flex-col">
-          {!isAdmin && <Navbar />}
+          <NavLayout>
           <main className="flex-1">{children}</main>
-          {!isAdmin && <Footer />}
+          </NavLayout>
         </div>
 
         {/* Global Sonner Toast Listener (duration set to 6 seconds) */}

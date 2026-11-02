@@ -50,23 +50,16 @@ export interface GalleryResponse{
   data: GalleryItems[];
 };
 
-// export const postHomeImage = async (payload: ImagePayload) => {
-//   const formData = new FormData();
-//   formData.append("image", payload.image);
-//   const { data } = await api.post("/home-images", formData, {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-//   return data;
-// };
 
 export const postHomeImage = async (payload: ImagePayload) => {
   const formData = new FormData();
   formData.append("image", payload.image);
   
-  // Axios automatically detects FormData and applies the correct multipart/form-data header with boundary
-  const { data } = await api.post("/home-images", formData);
+  const { data } = await api.post("/home-images", formData, {
+    headers: {
+      "Content-Type": undefined,
+    } as any,
+  });
   return data;
 };
 

@@ -27,7 +27,12 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
+      // Check sessionStorage first, then fallback to localStorage keys
+      const token =
+        sessionStorage.getItem("laef_admin_token") ||
+        localStorage.getItem("laef_admin_token") ||
+        localStorage.getItem("token");
+
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -41,9 +46,15 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.warn("Unauthorized access - Redirecting or clearing session...");
+      console.warn("Token expired or unauthorized - Logging out...");
       if (typeof window !== "undefined") {
+        sessionStorage.removeItem("laef_admin_token");
+        sessionStorage.removeItem("laef_admin_user");
+        localStorage.removeItem("laef_admin_token");
+        localStorage.removeItem("laef_admin_user");
         localStorage.removeItem("token");
+        
+        // Force hard redirect so application state resets completely
         window.location.href = "/auth/login";
       }
     }

@@ -224,7 +224,7 @@ export default function DonateSlugPage({ params }: PageProps) {
                   label="Organisation / Company Name"
                   value={organisationName}
                   onChange={setOrganisationName}
-                  placeholder="Organization name (Optional)"
+                  placeholder="Organization name"
                   required={false}
                 />
               </div>
