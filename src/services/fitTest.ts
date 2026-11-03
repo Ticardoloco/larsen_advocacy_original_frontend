@@ -38,3 +38,8 @@ export const getAllFitTests = async (): Promise<FitTestResponse>=>{
     const {data} = await api.get<FitTestResponse>("/fit-test/results");
     return data;
 }
+
+export const deleteFitTest = async (id: string)=>{
+    const {data} = await api.delete(`/fit-test/results/${id}`);
+    return data;
+}

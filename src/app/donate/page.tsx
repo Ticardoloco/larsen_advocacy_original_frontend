@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-// @ts-expect-error CSS side-effect imports may not have declarations in this package.
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function DonateRootPage() {

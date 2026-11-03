@@ -1,61 +1,3 @@
-// import { api } from "@/lib/api";
-
-// export interface Callout{
-//     title: string;
-//     body: string;
-// }
-
-// export interface ProgramPayload{
-//     name: string;
-//     taglines: string;
-//     category: string;
-//     body: string[];
-//     ctas: string[];
-//     callout: Callout;
-//     image: string;
-// }
-//  export interface ProgramItem{
-//     _id: string;
-//     slug: string;
-//     name: string;
-//     taglines: string;
-//     body: string[];
-//     ctas: string[];
-//     images: string;
-//     category: string;
-//  }
-
-//  export interface ProgramResponse{
-//     message: string;
-//     count: number;
-//     data: ProgramItem[];
-//  }
-
-//  export const postProgram = async (payload: ProgramPayload): Promise<ProgramResponse>=>{
-//     const {data} = await api.post<ProgramResponse>("/programs", payload);
-//     return data;
-//  }
-
-//  export const getPrograms = async (): Promise<ProgramResponse[]>=>{
-//     const {data}= await api.get<ProgramResponse[]>("/programs");
-//     return data;
-//  }
-
-//  export const getProgramBySlug = async (slug: string): Promise<ProgramResponse>=>{
-//     const {data} = await api.get<ProgramResponse>(`/programs/${slug}`);
-//     return data;
-//  }
-
-//  export const updateProgram = async (id: string, payload: ProgramPayload): Promise<ProgramResponse> =>{
-//     const {data} = await api.put<ProgramResponse>(`/programs/${id}`, payload);
-//     return data;
-//  }
-
-//  export const deleteProgram = async (id: string)=>{
-//     const {data} = await api.delete(`/programs/${id}`);
-//     return data;
-//  }
-
 import { api } from "@/lib/api";
 
 export interface Callout {
@@ -70,14 +12,15 @@ export interface ProgramPayload {
   body: string[];
   ctas?: string[];
   callout?: Callout;
-  image?: string;
+  image?: string | File;
 }
 
 export interface ProgramItem {
   _id: string;
   slug: string;
   name: string;
-  taglines: string;
+  tagline?: string;
+  taglines?: string;
   category: string;
   body: string[];
   ctas?: string[];
@@ -87,32 +30,85 @@ export interface ProgramItem {
   updatedAt?: string;
 }
 
-// Envelope for single item operations (POST, GET by slug, PUT)
 export interface ProgramSingleResponse {
   message?: string;
   data: ProgramItem;
 }
 
-// Envelope for list operations (GET all)
 export interface ProgramListResponse {
   message?: string;
   count?: number;
   data: ProgramItem[];
 }
 
-// 1. CREATE PROGRAM
+/** Build FormData safely (works for both create & update) */
+const createProgramFormData = (
+  payload: Partial<ProgramPayload>,
+): FormData => {
+  const formData = new FormData();
+
+  if (payload.name) {
+    formData.append("name", payload.name);
+  }
+
+  // Handle both tagline / taglines
+  if (payload.tagline) {
+    formData.append("tagline", payload.tagline);
+    formData.append("taglines", payload.tagline);
+  }
+
+  if (payload.category) {
+    formData.append("category", payload.category);
+  } else {
+    formData.append("category", "General");
+  }
+
+  // Arrays
+  if (Array.isArray(payload.body)) {
+    payload.body.forEach((item) => {
+      formData.append("body[]", item);
+    });
+  }
+
+  if (Array.isArray(payload.ctas)) {
+    payload.ctas.forEach((cta) => {
+      formData.append("ctas[]", cta);
+    });
+  }
+
+ 
+  if (payload.callout) {
+    formData.append("callout[title]", payload.callout.title ?? "");
+    formData.append("callout[body]", payload.callout.body ?? "");
+  }
+
+
+  if (payload.image instanceof File) {
+    formData.append("image", payload.image);   // ← try "image" first
+  } else if (typeof payload.image === "string" && payload.image.trim() !== "") {
+    formData.append("image", payload.image);
+  }
+
+  return formData;
+};
+
+
+
+/** 1. CREATE PROGRAM */
 export const postProgram = async (
   payload: ProgramPayload,
 ): Promise<ProgramSingleResponse> => {
-  const { data } = await api.post<ProgramSingleResponse>("/programs", payload);
+  const formData = createProgramFormData(payload);
+  const { data } = await api.post<ProgramSingleResponse>("/programs", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return data;
 };
 
-// 2. GET ALL PROGRAMS (Returns un-wrapped list for easy UI mapping)
+/** 2. GET ALL PROGRAMS */
 export const getPrograms = async (): Promise<ProgramItem[]> => {
-  const response = await api.get<any>("/programs");
+  const response = await api.get<ProgramListResponse | ProgramItem[]>("/programs");
 
-  // Safe array un-wrapping for both { data: [...] } and direct array response [...]
   if (Array.isArray(response.data)) {
     return response.data;
   }
@@ -122,31 +118,37 @@ export const getPrograms = async (): Promise<ProgramItem[]> => {
   return [];
 };
 
-// 3. GET PROGRAM BY SLUG
+/** 3. GET PROGRAM BY SLUG */
 export const getProgramBySlug = async (
   slug: string,
 ): Promise<ProgramItem | null> => {
-  const response = await api.get<any>(`/programs/${slug}`);
+  const response = await api.get<ProgramSingleResponse | ProgramItem>(
+    `/programs/${slug}`,
+  );
 
-  if (response.data?.data) {
+  if (response.data && "data" in response.data && response.data.data) {
     return response.data.data;
   }
-  return response.data || null;
+  return (response.data as ProgramItem) || null;
 };
 
-// 4. UPDATE PROGRAM BY ID
+/** 4. UPDATE PROGRAM */
 export const updateProgram = async (
   id: string,
   payload: Partial<ProgramPayload>,
 ): Promise<ProgramSingleResponse> => {
+  const formData = createProgramFormData(payload);
   const { data } = await api.put<ProgramSingleResponse>(
     `/programs/${id}`,
-    payload,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    },
   );
   return data;
 };
 
-// 5. DELETE PROGRAM BY ID
+/** 5. DELETE PROGRAM BY ID */
 export const deleteProgram = async (
   id: string,
 ): Promise<{ message?: string }> => {

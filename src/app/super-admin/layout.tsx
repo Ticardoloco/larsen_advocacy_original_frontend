@@ -58,7 +58,7 @@ export default function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
       sessionStorage.clear();
       localStorage.clear();
       toast.success("Logged out from Super-Admin session");
-      router.push("/login");
+      router.push("/auth/login");
     }
   };
 

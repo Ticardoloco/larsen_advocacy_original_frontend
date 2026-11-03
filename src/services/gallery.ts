@@ -27,7 +27,8 @@ export interface GalleryPayload {
   caption: string;
   category: string;
   year: string;
-  image: string;
+  tone?: number;
+  image: File | string;
 };
 
 export interface GalleryItems{
@@ -76,20 +77,50 @@ export const getHomeImage = async (): Promise<HomeImageItem[]> => {
   return [];
 };
 
-export const postGallery = async (payload: GalleryPayload): Promise<SingleGalleryResponse>=>{
-  const {data} = await api.post<SingleGalleryResponse>("/gallery", payload);
-  return data;
-}
 
+export const postGallery = async (payload: GalleryPayload) => {
+  const formData = new FormData();
+  formData.append("caption", payload.caption);
+  formData.append("category", payload.category);
+  formData.append("year", payload.year);
+  formData.append("tone", (payload.tone ?? 0).toString());
+
+  // Attach file if selected
+  if (payload.image instanceof File) {
+    formData.append("image", payload.image);
+  } else if (typeof payload.image === "string") {
+    formData.append("image", payload.image);
+  }
+
+  const { data } = await api.post("/gallery", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
+};
 export const getAllGallerys = async (): Promise<GalleryResponse>=>{
   const {data} = await api.get<GalleryResponse>("/gallery");
   return data;
 };
 
-export const updateGallery = async (id: string, payload: GalleryPayload): Promise<SingleGalleryResponse>=>{
-  const {data} = await api.put<SingleGalleryResponse>(`/gallery/${id}`, payload);
+export const updateGallery = async (id: string, payload: GalleryPayload): Promise<SingleGalleryResponse> => {
+  const formData = new FormData();
+  formData.append("caption", payload.caption);
+  formData.append("category", payload.category);
+  formData.append("year", payload.year);
+  formData.append("tone", (payload.tone ?? 0).toString());
+
+  // Attach file or existing image URL string
+  if (payload.image instanceof File) {
+    formData.append("image", payload.image);
+  } else if (typeof payload.image === "string") {
+    formData.append("image", payload.image);
+  }
+
+  const { data } = await api.put<SingleGalleryResponse>(`/gallery/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return data;
-}
+};
 
 export const deleteGallery = async (id: string)=>{
   const {data} = await api.delete(`/gallery/${id}`);

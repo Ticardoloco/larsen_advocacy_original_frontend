@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
-// @ts-expect-error - Next.js allows CSS side-effect imports without a generated type declaration in this setup.
 import "./globals.css";
-// @ts-expect-error - TypeScript may not have declarations for this CSS side-effect import.
 import "react-loading-skeleton/dist/skeleton.css";
 import NavLayout from "@/components/site/NavLayout";
 
