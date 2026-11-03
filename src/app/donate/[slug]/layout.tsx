@@ -1,3 +1,6 @@
+"use client";
+
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { PageHeader } from "@/components/site/PageHeader";
@@ -9,18 +12,31 @@ interface LayoutProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function DonateSlugLayout({ children, params }: LayoutProps) {
-  const { slug: activeSlug } = await params;
+export default function DonateSlugLayout({ children, params }: LayoutProps) {
+  const { slug: activeSlug } = use(params);
+  const [funds, setFunds] = useState<DonateFundItems[]>([]);
 
-  let funds: DonateFundItems[] = [];
-  try {
-    const res = await getAllDonateFunds();
-    funds = res.data || [];
+  useEffect(() => {
+    let isMounted = true;
+    const fetchFunds = async () => {
+      try {
+        const res = await getAllDonateFunds();
+        if (isMounted && res?.data) {
+          setFunds(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to load donation funds:", err);
+      }
+    };
 
-  } catch (err) {
-    funds = [];
-  }
-  
+    fetchFunds();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Safe reversal of funds array
+  const displayFunds = [...funds].reverse();
 
   return (
     <>
@@ -31,13 +47,13 @@ export default async function DonateSlugLayout({ children, params }: LayoutProps
       />
 
       <section className="container-page py-16">
-        {/* Fixed Filter Pills Navigation */}
+        {/* Filter Pills Navigation */}
         <div className="flex flex-wrap gap-2">
-          {funds.toReversed().map((f) => {
+          {displayFunds.map((f) => {
             const isActive = activeSlug === f.slug;
             return (
               <Link
-                key={f._id}
+                key={f._id || f.slug}
                 href={`/donate/${f.slug}`}
                 scroll={false}
                 className={cn(
@@ -57,7 +73,7 @@ export default async function DonateSlugLayout({ children, params }: LayoutProps
         <div className="mt-10 grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-start">
           <div>{children}</div>
 
-          {/* Fixed Impact Sidebar */}
+          {/* Impact Sidebar */}
           <aside className="surface-card rounded-2xl bg-primary p-7 text-primary-foreground md:p-9">
             <ShieldCheck className="h-8 w-8 text-accent" />
             <h2 className="mt-5 text-xl font-bold">Where your gift goes</h2>
@@ -73,5 +89,3 @@ export default async function DonateSlugLayout({ children, params }: LayoutProps
     </>
   );
 }
-
-
