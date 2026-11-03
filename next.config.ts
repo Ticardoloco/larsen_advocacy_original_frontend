@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Whitelist your active Ngrok domain to resolve cross-origin asset/Fast Refresh warnings
   allowedDevOrigins: [
     "manly-duchess-ovary.ngrok-free.dev",
   ],
@@ -13,10 +12,11 @@ const nextConfig = {
     ],
   },
   async rewrites() {
+    const backendUrl = process.env.BACKEND_SERVER_URL || "http://127.0.0.1:4006";
     return [
       {
         source: "/api/:path*",
-        destination: "http://127.0.0.1:4006/api/:path*", // Proxies /api calls to your Express backend
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },
