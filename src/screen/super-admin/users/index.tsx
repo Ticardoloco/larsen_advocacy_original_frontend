@@ -15,6 +15,7 @@ import {
   UserCheck,
   UserX,
   Eye,
+  EyeOff,
   MapPin,
 } from "lucide-react";
 import {
@@ -33,6 +34,7 @@ export default function SuperAdminUsersPage() {
   // Register Modal State
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [registering, setRegistering] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [registerForm, setRegisterForm] = useState<RegisterAdminPayload>({
     email: "",
     password: "",
@@ -81,6 +83,7 @@ export default function SuperAdminUsersPage() {
       await registerAdmin(registerForm);
       toast.success("New admin registered successfully!");
       setIsRegisterModalOpen(false);
+      setShowPassword(false);
       setRegisterForm({
         email: "",
         password: "",
@@ -392,7 +395,10 @@ export default function SuperAdminUsersPage() {
                 <UserPlus className="h-4 w-4 text-primary" /> Register New Admin
               </h3>
               <button
-                onClick={() => setIsRegisterModalOpen(false)}
+                onClick={() => {
+                  setIsRegisterModalOpen(false);
+                  setShowPassword(false);
+                }}
                 className="rounded-lg p-1 text-muted-foreground hover:bg-secondary cursor-pointer"
               >
                 <X className="h-5 w-5" />
@@ -414,14 +420,24 @@ export default function SuperAdminUsersPage() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-primary block">Password *</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={registerForm.password}
-                  onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
+                <div className="relative flex items-center">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    placeholder="••••••••"
+                    value={registerForm.password}
+                    onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
+                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-border bg-background text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 text-muted-foreground hover:text-primary cursor-pointer"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-1.5">
@@ -439,7 +455,10 @@ export default function SuperAdminUsersPage() {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
                 <button
                   type="button"
-                  onClick={() => setIsRegisterModalOpen(false)}
+                  onClick={() => {
+                    setIsRegisterModalOpen(false);
+                    setShowPassword(false);
+                  }}
                   className="px-4 py-2.5 rounded-xl text-xs font-semibold text-muted-foreground hover:bg-secondary transition-colors cursor-pointer"
                 >
                   Cancel

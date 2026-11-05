@@ -1,12 +1,38 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, MapPin, PhoneCall } from "lucide-react";
+import { 
+  Mail, 
+  MapPin, 
+  PhoneCall, 
+  Facebook, 
+  Instagram, 
+  Linkedin, 
+  Youtube 
+} from "lucide-react";
 import { HELPLINE } from "@/data/laef";
 import { useEffect, useState } from "react";
 import { getPrograms, ProgramItem } from "@/services/program";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useRouter } from "next/navigation";
+
+// Custom Icon for X (formerly Twitter)
+function XIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+// Replace these placeholder URLs with your official social media profile links
+const socialLinks = [
+  { name: "Facebook", href: "https://facebook.com/your-page", icon: Facebook },
+  { name: "X", href: "https://x.com/your-handle", icon: XIcon },
+  { name: "Instagram", href: "https://instagram.com/your-handle", icon: Instagram },
+  { name: "LinkedIn", href: "https://linkedin.com/company/your-company", icon: Linkedin },
+  { name: "YouTube", href: "https://youtube.com/@your-channel", icon: Youtube },
+];
 
 export function Footer() {
   const router = useRouter();
@@ -73,6 +99,7 @@ export function Footer() {
   return (
     <footer className="mt-24 bg-primary-deep text-primary-foreground">
       <div className="container-page grid gap-10 py-14 md:grid-cols-4">
+        {/* Column 1: Info & Social Icons */}
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
             <img src="/laef-mark.png" alt="LAEF" loading="lazy" width={816} height={816} className="h-12 w-12" />
@@ -81,8 +108,28 @@ export function Footer() {
           <p className="mt-4 text-sm leading-relaxed text-primary-foreground/70">
             Larsen Advocacy and Empowerment Foundation — committed to ending sexual violence and child trafficking.
           </p>
+
+          {/* Social Media Links */}
+          <div className="mt-6 flex items-center gap-3">
+            {socialLinks.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.name}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-all hover:bg-accent hover:text-primary"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              );
+            })}
+          </div>
         </div>
 
+        {/* Column 2: About Us */}
         <div>
           <h3 className="text-sm font-bold uppercase tracking-widest text-accent">About Us</h3>
           <ul className="mt-4 space-y-2 text-sm text-primary-foreground/75">
@@ -94,6 +141,7 @@ export function Footer() {
           </ul>
         </div>
 
+        {/* Column 3: Our Work */}
         <div>
           <h3 className="text-sm font-bold uppercase tracking-widest text-accent">Our Work</h3>
           <ul className="mt-4 space-y-2 text-sm text-primary-foreground/75">
@@ -119,6 +167,7 @@ export function Footer() {
           </ul>
         </div>
 
+        {/* Column 4: Reach Us */}
         <div>
           <h3 className="text-sm font-bold uppercase tracking-widest text-accent">Reach Us</h3>
           <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
@@ -147,12 +196,17 @@ export function Footer() {
           </ul>
         </div>
       </div>
+
+      {/* Bottom Bar */}
       <div className="border-t border-primary-foreground/10">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Larsen Advocacy and Empowerment Foundation. All rights reserved.</p>
-          <a href="/auth/login" onClick={handleStaffDashboardClick} className="hover:text-accent cursor-pointer">
-            Staff Dashboard
-          </a>
+          
+          <div className="flex items-center gap-4">
+            <a href="/auth/login" onClick={handleStaffDashboardClick} className="hover:text-accent cursor-pointer">
+              Staff Dashboard
+            </a>
+          </div>
         </div>
       </div>
     </footer>

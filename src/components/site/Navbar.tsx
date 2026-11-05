@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Key, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, Menu, PhoneCall, X } from "lucide-react";
 import { HELPLINE } from "@/data/laef";
 import { ButtonLink } from "./Button";
@@ -103,6 +103,7 @@ export function Navbar() {
             </span>
           </Link>
 
+          {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 lg:flex">
             <Link
               href="/"
@@ -116,7 +117,7 @@ export function Navbar() {
                 <DropItem key={l.href} href={l.href} label={l.label} />
               ))}
             </DesktopDropdown>
-            
+
             <DesktopDropdown label="Our Work">
               <DropItem href="/programs" label="All Programmes" />
               {programsLoading ? (
@@ -140,7 +141,7 @@ export function Navbar() {
             >
               Gallery / Events
             </Link>
-            
+
             <Link
               href="/donor-remarks"
               className="rounded-full px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-primary"
@@ -154,7 +155,14 @@ export function Navbar() {
             >
               Fit Test
             </Link>
-            
+
+            <Link
+              href="/get-support"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-primary"
+            >
+              Get Support / Take Action
+            </Link>
+
             <ButtonLink href="/donate" size="sm" className="ml-2">
               Donate
             </ButtonLink>
@@ -169,13 +177,14 @@ export function Navbar() {
           </button>
         </div>
 
+        {/* Mobile Navigation */}
         {open && (
           <div className="border-t border-border bg-background lg:hidden">
             <div className="container-page flex flex-col gap-1 py-4">
               <Link href="/" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 font-semibold">
                 Home
               </Link>
-              
+
               <div key="about">
                 <button
                   onClick={() => setSection(section === "about" ? null : "about")}
@@ -260,6 +269,9 @@ export function Navbar() {
               </Link>
               <Link href="/fit-test" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 font-semibold">
                 Fit Test
+              </Link>
+              <Link href="/get-support" onClick={() => setOpen(false)} className="rounded-xl px-3 py-2.5 font-semibold">
+                Get Support / Take Action
               </Link>
               <ButtonLink href="/donate" onClick={() => setOpen(false)} className="mt-2" size="lg">
                 Donate

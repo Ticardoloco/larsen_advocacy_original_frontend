@@ -10,6 +10,7 @@ import {
   MessageSquareQuote,
   FileText,
   ClipboardCheck,
+  LifeBuoy,
   Settings,
   LogOut,
   Menu,
@@ -32,6 +33,7 @@ const navItems = [
   { href: "/admin/partners", label: "Partnerships", icon: FileText },
   { href: "/admin/remarks", label: "Donor Remarks", icon: MessageSquareQuote },
   { href: "/admin/fit-test-results", label: "Fit Test Results", icon: ClipboardCheck },
+  { href: "/admin/support", label: "Support & Reports", icon: LifeBuoy },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

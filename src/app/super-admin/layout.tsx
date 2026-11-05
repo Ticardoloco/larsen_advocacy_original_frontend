@@ -16,6 +16,7 @@ import {
   FileText,
   MessageSquareQuote,
   ClipboardCheck,
+  LifeBuoy,
   Settings,
   LogOut,
   Menu,
@@ -136,6 +137,11 @@ export default function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
           href: "/super-admin/fit-test",
           icon: ClipboardCheck,
         },
+        {
+          name: "Support & Reports",
+          href: "/super-admin/support",
+          icon: LifeBuoy,
+        },
       ],
     },
     {
@@ -152,7 +158,7 @@ export default function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row text-foreground">
-      {/* Mobile Header Bar - Changed to solid bg-background/bg-white instead of translucent */}
+      {/* Mobile Header Bar */}
       <div className="md:hidden flex items-center justify-between border-b border-border bg-background px-4 py-3.5 sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="relative h-8 w-8 flex items-center justify-center shrink-0">
@@ -183,7 +189,7 @@ export default function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
         </button>
       </div>
 
-      {/* Mobile Backdrop Overlay - Solid dark backdrop without blur */}
+      {/* Mobile Backdrop Overlay */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
