@@ -12,7 +12,7 @@ const Founder = ({message}: {message: string}) => {
               “{message}”
             </blockquote>
             <p className="mt-6 text-sm font-semibold text-foreground">
-              Miss Omotoyosi Omolade Fadayomi
+              Omotoyosi Omolade Fadayomi
               <span className="block font-normal text-muted-foreground">Founder, LAEF</span>
             </p>
           </div>

@@ -58,7 +58,7 @@ export default function StoryPage() {
         <div className="surface-card mt-8 bg-sage-soft p-8">
           <h2 className="text-xl text-primary">Founder</h2>
           <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
-            LAEF was founded by Miss Omotoyosi Omolade Fadayomi, whose lived experience shapes the foundation&apos;s
+            LAEF was founded by Omotoyosi Omolade Fadayomi, whose lived experience shapes the foundation&apos;s
             survivor-centred approach, and whose leadership anchors the work of LAEF Care Plus Clinic.
           </p>
         </div>

@@ -25,13 +25,22 @@ function XIcon({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
-// Replace these placeholder URLs with your official social media profile links
+// Custom Icon for TikTok
+function TikTokIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    </svg>
+  );
+}
+
 const socialLinks = [
-  { name: "Facebook", href: "https://facebook.com/your-page", icon: Facebook },
-  { name: "X", href: "https://x.com/your-handle", icon: XIcon },
-  { name: "Instagram", href: "https://instagram.com/your-handle", icon: Instagram },
-  { name: "LinkedIn", href: "https://linkedin.com/company/your-company", icon: Linkedin },
-  { name: "YouTube", href: "https://youtube.com/@your-channel", icon: Youtube },
+  { name: "Facebook", href: "https://www.facebook.com/profile.php?id=100068745720224", icon: Facebook },
+  { name: "X", href: "https://x.com/larsenadvocacy?s=21", icon: XIcon },
+  { name: "Instagram", href: "https://www.instagram.com/larsenadvocacy?igsh=a2ltazN5ZnoycDNv", icon: Instagram },
+  { name: "TikTok", href: "https://www.tiktok.com/@larsenadvocacy?_r=1&_t=ZS-97t09t7OuCy", icon: TikTokIcon },
+  { name: "LinkedIn", href: "https://www.linkedin.com/posts/larsen-advocacy-and-empowerment-foundation_projecthope-bank200communityaid-communityoutreach-activity-7408824881460461568-64bH?utm_source=share&utm_medium=member_android&rcm=ACoAACeOG2gBp_F1lYyDVWTJCz7VGcJ7c_ZAEj4", icon: Linkedin },
+  { name: "YouTube", href: "https://www.youtube.com/@Larsenadvocacystudio", icon: Youtube },
 ];
 
 export function Footer() {
@@ -63,7 +72,6 @@ export function Footer() {
     };
   }, []);
 
-  // Smart handler for the Staff Dashboard link
   const handleStaffDashboardClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -75,7 +83,6 @@ export function Footer() {
     const token = sessionStorage.getItem("laef_admin_token") || localStorage.getItem("laef_admin_token");
     const storedUser = sessionStorage.getItem("laef_admin_user") || localStorage.getItem("laef_admin_user");
 
-    // If not authenticated, redirect to login
     if (!token || !storedUser) {
       router.push("/auth/login");
       return;
@@ -85,7 +92,6 @@ export function Footer() {
       const user = JSON.parse(storedUser);
       const role = user.role?.toLowerCase() || "";
 
-      // Route based on role
       if (role === "superadmin" || role === "super-admin") {
         router.push("/super-admin");
       } else {
@@ -109,8 +115,8 @@ export function Footer() {
             Larsen Advocacy and Empowerment Foundation — committed to ending sexual violence and child trafficking.
           </p>
 
-          {/* Social Media Links */}
-          <div className="mt-6 flex items-center gap-3">
+          {/* Social Media Links (Expanded width to fit full column naturally on a single row) */}
+          <div className="mt-6 flex w-full items-center justify-between gap-1 max-w-[280px]">
             {socialLinks.map((item) => {
               const Icon = item.icon;
               return (
@@ -120,7 +126,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={item.name}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-all hover:bg-accent hover:text-primary"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-all hover:bg-accent hover:text-primary"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
